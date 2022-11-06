@@ -23,7 +23,7 @@ install:
 
 clean:
 	for f in $(NAME) $(NAME)-*-* ; do if test -x $$f ; then rm -f $$f ; fi; done
-	rm -f $(NAME)-$(VERSION).tar.gz
+	rm -f $(NAME)-$(VERSION).tar.gz $(NAME)-$(VERSION).sha1sum
 
 build: dependencies test $(NAME)
 

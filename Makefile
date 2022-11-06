@@ -14,9 +14,8 @@ armCompile = GOOS=$(1) GOARCH=arm GOARM=$(2) $(build) -o $(NAME)-$(1)-arm$(2) $(
 all: build
 
 release: clean dependencies test linux darwin freebsd netbsd openbsd
-	git archive --format tar --prefix $(NAME)-$(VERSION)/ -o $(NAME)-$(VERSION).tar main
-	tar -rf $(NAME)-$(VERSION).tar --transform 's|^|$(NAME)-$(VERSION)/bin/|' $(NAME)-*-*
-	gzip $(NAME)-$(VERSION).tar
+	tar --owner=0 --group=0 -czf $(NAME)-$(VERSION).tar.gz --transform 's|^|$(NAME)-$(VERSION)/|' go.* LICENSE Makefile README.md cmd/ $(NAME)-*-*
+	sha1sum $(NAME)-*-* > $(NAME)-$(VERSION).sha1sum
 
 install:
 	@if [ `id -u` -ne 0 ]; then echo "You may need to sudo to install $(NAME)." ; fi

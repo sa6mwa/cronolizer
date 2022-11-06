@@ -71,8 +71,8 @@ Entry                  | Description                                | Equivalent
 @hourly                | Run once an hour, beginning of hour        | 0 * * * *
 
 The parent process will start a copy of itself in the background and exit while
-the copy (child process) will run cron and block indefinitely until killed
-(unless the -fg option is issued).
+the copy (child process) will run cron (unless the -fg option is issued) and
+block indefinitely until killed.
 `
 )
 
@@ -128,7 +128,7 @@ func main() {
 	shell := flag.String("shell", "/bin/sh", "Full path to shell used to execute command")
 	shellCommandOption := flag.String("shellCommandOption", "-c", "Command option used by the shell, usually -c")
 	truncateLog := flag.Bool("truncate", false, "Truncate instead of appending to the log file")
-	quiet := flag.Bool("q", false, "Quiet, don't print the PID message at the end or the log entry in the output file")
+	quiet := flag.Bool("q", false, "Quiet, don't print the PID message at the end or the log entry in the log file")
 	foreground := flag.Bool(foregroundFlag, false, "Run cron in the foreground instead of as a background daemon process")
 
 	flag.Parse()

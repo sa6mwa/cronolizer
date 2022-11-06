@@ -1,6 +1,7 @@
 NAME = cronolize
 MODULE = github.com/sa6mwa/cronolizer
 VERSION = $(shell git describe --tags --abbrev=0 2>/dev/null || echo 0)
+DESTDIR = /usr/local/bin
 #GOOS = $(shell uname -s | tr '[:upper:]' '[:lower:]')
 SRC = $(MODULE)/cmd/$(NAME)
 GO = CGO_ENABLED=0 go
@@ -12,8 +13,18 @@ armCompile = GOOS=$(1) GOARCH=arm GOARM=$(2) $(build) -o $(NAME)-$(1)-arm$(2) $(
 
 all: build
 
+release: clean dependencies test linux darwin freebsd netbsd openbsd
+	git archive --format tar --prefix $(NAME)-$(VERSION)/ -o $(NAME)-$(VERSION).tar main
+	tar -rf $(NAME)-$(VERSION).tar --transform 's|^|$(NAME)-$(VERSION)/bin/|' $(NAME)-*-*
+	gzip $(NAME)-$(VERSION).tar
+
+install:
+	@if [ `id -u` -ne 0 ]; then echo "You may need to sudo to install $(NAME)." ; fi
+	for f in $(NAME) $(NAME)-*-* ; do if test -x $$f ; then install $$f $(DESTDIR)/$$f ; fi ; done
+
 clean:
 	for f in $(NAME) $(NAME)-*-* ; do if test -x $$f ; then rm -f $$f ; fi; done
+	rm -f $(NAME)-$(VERSION).tar.gz
 
 build: dependencies test $(NAME)
 
